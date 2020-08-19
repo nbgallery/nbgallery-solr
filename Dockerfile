@@ -2,7 +2,7 @@ FROM solr:8
 MAINTAINER team@nb.gallery
 
 COPY nbgallery-docker-entrypoint.sh /opt/docker-solr/scripts
-COPY ./config/ /opt/solr/boostrap
+COPY ./config/ /opt/solr/bootstrap
 
 ENTRYPOINT ["nbgallery-docker-entrypoint.sh"]
 CMD ["solr-foreground"]
