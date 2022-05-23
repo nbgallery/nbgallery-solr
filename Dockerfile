@@ -1,7 +1,7 @@
-FROM solr:8
+FROM solr:9
 MAINTAINER team@nb.gallery
 
-COPY nbgallery-docker-entrypoint.sh /opt/docker-solr/scripts
+COPY nbgallery-docker-entrypoint.sh /opt/solr/docker/scripts
 COPY ./config/ /opt/solr/bootstrap
 
 ENTRYPOINT ["nbgallery-docker-entrypoint.sh"]
