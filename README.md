@@ -1,5 +1,7 @@
 # nbgallery-solr
-Docker container with Solr 8 pre-configured for nbgallery using sunspot with default/test/development cores
+Docker container with Solr 9 pre-configured for nbgallery using sunspot with default/test/development cores
+
+The 9.0 based images will attempt to update any cores from 8.x but test before deploying to your environment (or just create a file in your data volume called `_solr_9_upgrade' which maps to path /var/solr/data/_solr_9_upgrade in the container)
 
 To have persistence of the data, map a volume to /var/solr/data
 
