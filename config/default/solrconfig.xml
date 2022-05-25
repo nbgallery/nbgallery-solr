@@ -35,7 +35,7 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>7.3.0</luceneMatchVersion>
+  <luceneMatchVersion>9.0.0</luceneMatchVersion>
 
   <!-- <lib/> directives can be used to instruct Solr to load any Jars
        identified and use them to resolve any "plugins" specified in
@@ -73,16 +73,11 @@
        with their external dependencies.
     -->
   <lib dir="${solr.install.dir:../../../..}/contrib/extraction/lib" regex=".*\.jar" />
-  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-cell-\d.*\.jar" />
 
   <lib dir="${solr.install.dir:../../../..}/contrib/clustering/lib/" regex=".*\.jar" />
-  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-clustering-\d.*\.jar" />
 
   <lib dir="${solr.install.dir:../../../..}/contrib/langid/lib/" regex=".*\.jar" />
-  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-langid-\d.*\.jar" />
 
-  <lib dir="${solr.install.dir:../../../..}/contrib/velocity/lib" regex=".*\.jar" />
-  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-velocity-\d.*\.jar" />
   <lib dir="${solr.install.dir:../../../..}/modules/scripting/lib" regex=".*\.jar" />
   <!-- an exact 'path' can be used instead of a 'dir' to specify a
        specific jar file.  This will cause a serious error to be logged
@@ -249,24 +244,6 @@
   </indexConfig>
 
 
-  <!-- JMX
-
-       This example enables JMX if and only if an existing MBeanServer
-       is found, use this if you want to configure JMX through JVM
-       parameters. Remove this to disable exposing Solr configuration
-       and statistics to JMX.
-
-       For more details see http://wiki.apache.org/solr/SolrJmx
-    -->
-  <jmx />
-  <!-- If you want to connect to a particular server, specify the
-       agentId
-    -->
-  <!-- <jmx agentId="myAgent" /> -->
-  <!-- If you want to start a new MBeanServer, specify the serviceUrl -->
-  <!-- <jmx serviceUrl="service:jmx:rmi:///jndi/rmi://localhost:9999/solr"/>
-    -->
-
   <!-- The default high-performance update handler -->
   <updateHandler class="solr.DirectUpdateHandler2">
 
@@ -409,7 +386,7 @@
                       to occupy. Note that when this option is specified, the size
                       and initialSize parameters are ignored.
       -->
-    <filterCache class="solr.FastLRUCache"
+    <filterCache class="solr.CaffeineCache"
                  size="512"
                  initialSize="512"
                  autowarmCount="0"/>
@@ -422,7 +399,7 @@
             maxRamMB - the maximum amount of RAM (in MB) that this cache is allowed
                        to occupy
       -->
-    <queryResultCache class="solr.LRUCache"
+    <queryResultCache class="solr.CaffeineCache"
                       size="512"
                       initialSize="512"
                       autowarmCount="0"/>
@@ -433,14 +410,14 @@
          document).  Since Lucene internal document ids are transient,
          this cache will not be autowarmed.
       -->
-    <documentCache class="solr.LRUCache"
+    <documentCache class="solr.CaffeineCache"
                    size="512"
                    initialSize="512"
                    autowarmCount="0"/>
 
     <!-- custom cache currently used by block join -->
     <cache name="perSegFilter"
-           class="solr.search.LRUCache"
+           class="solr.search.CaffeineCache"
            size="10"
            initialSize="0"
            autowarmCount="10"
@@ -453,7 +430,7 @@
          even if not configured here.
       -->
     <!--
-       <fieldValueCache class="solr.FastLRUCache"
+       <fieldValueCache class="solr.CaffeineCache"
                         size="512"
                         autowarmCount="128"
                         showItems="32" />
@@ -470,7 +447,7 @@
       -->
     <!--
        <cache name="myUserCache"
-              class="solr.LRUCache"
+              class="solr.CaffeineCache"
               size="4096"
               initialSize="1024"
               autowarmCount="1024"
@@ -695,10 +672,10 @@
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
       <!-- Default search field
-         <str name="df">text</str> 
+         <str name="df">text</str>
         -->
       <!-- Change from JSON to XML format (the default prior to Solr 7.0)
-         <str name="wt">xml</str> 
+         <str name="wt">xml</str>
         -->
     </lst>
     <!-- In addition to defaults, "appends" params can be specified
